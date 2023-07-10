@@ -16,17 +16,47 @@
     <body>
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
-              <a class="navbar-brand" href="about">Best Cars Dealership</a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                  <a class="nav-link active" aria-current="page" href="about">Home</a>
-                  <a class="nav-link" href="#">Catalog</a>
-                  <a class="nav-link" href="contact">Contact Us</a>
+              <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Best Car Dealership</a>
+              <div class="collapse navbar-collapse navbar-header">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-left">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'djangoapp:about' %}">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Catalog</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'djangoapp:contact' %}">Contact</a>
+                  </li>
+                </ul>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                <li>
+                    <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
+                    <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+                </li>
+                {% else %}
+                <li>
+                    <form class="form-inline" action = "{% url 'djangoapp:login' %}" method = "post">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control focus-ring py-1 px-2 text-decoration-none border rounded-2" placeholder="Username" name="username" >
+                            <input type="password" class="form-control form-control focus-ring py-1 px-2 text-decoration-none border rounded-2" placeholder="Password" name="password" >
+                            <button class="btn btn-primary" type="submit">Login</button>
+                            <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                        </div>
+                    </form>
+                </li>
+                {% endif %}
                 </div>
-              </div>
+            </ul>
+            {% if message %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{message}}
+                <button class="btn-outline-warning" data-bs-dismiss="alert">X</button>
+            </div>
+            {% endif %}
             </div>
           </nav>
 
@@ -44,4 +74,6 @@
         </footer>
       </div>
     </body>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </html>

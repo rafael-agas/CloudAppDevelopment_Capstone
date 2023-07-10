@@ -5,7 +5,85 @@
     {% load static %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-    <body>
-    <!--Add a registration form here -->
-    </body>
+<body>  
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Best Car Dealership</a>
+          <div class="collapse navbar-collapse navbar-header">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-left">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'djangoapp:about' %}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Catalog</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'djangoapp:contact' %}">Contact</a>
+              </li>
+            </ul>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+            <li>
+                <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
+                <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+            </li>
+            {% else %}
+            <li>
+                <form class="form-inline" action = "{% url 'djangoapp:login' %}" method = "post">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control focus-ring py-1 px-2 text-decoration-none border rounded-2" placeholder="Username" name="username" >
+                        <input type="password" class="form-control form-control focus-ring py-1 px-2 text-decoration-none border rounded-2" placeholder="Password" name="password" >
+                        <button class="btn btn-primary" type="submit">Login</button>
+                        <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                    </div>
+                </form>
+            </li>
+            {% endif %}
+            </div>
+        </ul>
+        </div>
+      </nav>
+
+ <!--Registration form starts here-->
+    <div class = 'container'>
+    <main class="form-signin w-100 m-auto">
+        <form action= "{% url 'djangoapp:registration' %}" method = 'post'>
+            <h1 class="h2 mb-3 fw-normal"><strong>Registration</strong></h1>
+            <hr>
+            <div class="form-floating mb-2">
+                <label for = 'username'>User Name</label>
+                <input class="form-control" name="username" placeholder="Username" required>
+            </div>
+            <div class="form-floating mb-2">
+                <label>First Name</label>
+                <input class="form-control" name="firstName" placeholder="First Name">
+            </div>
+            <div class="form-floating mb-2">
+                <label>Last Name</label>
+                <input class="form-control" name="lastName" placeholder="Last Name">
+            </div>
+            <div class="form-floating mb-2">
+                <label for = 'email'>Email address</label>
+                <input type="email" class="form-control" name="email" placeholder="name@example.com" required>
+            </div>
+            <div class="form-floating mb-2">
+                <label for = 'password'>Password</label>
+                <input type="password" class="form-control" name="password" placeholder="Password" required>
+            </div>
+            {% csrf_token %}
+            <button class="btn btn-primary w-100 py-2" type="submit">Register</button>
+            <p class="mt-5 mb-3 text-body-secondary">© 2023</p>
+        </form>
+    </main>
+    {% if message %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{message}}
+        <button class="btn-outline-warning" data-bs-dismiss="alert">X</button>
+    </div>
+    {% endif %}
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </html>

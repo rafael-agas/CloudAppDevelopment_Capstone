@@ -15,19 +15,43 @@
 <body> 
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Best Cars Dealership</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-              <a class="nav-link active" aria-current="page" href="about">Home</a>
-              <a class="nav-link" href="#">Catalog</a>
-              <a class="nav-link" href="contact">Contact Us</a>
-            </div>
-          </div>
+          <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Best Car Dealership</a>
+          <div class="collapse navbar-collapse navbar-header">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-left">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'djangoapp:about' %}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Catalog</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'djangoapp:contact' %}">Contact</a>
+              </li>
+            </ul>
         </div>
-    </nav>
+        <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+            <li>
+                <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
+                <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+            </li>
+            {% else %}
+            <li>
+                <form class="form-inline" action = "{% url 'djangoapp:login' %}" method = "post">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control focus-ring py-1 px-2 text-decoration-none border rounded-2" placeholder="Username" name="username" >
+                        <input type="password" class="form-control form-control focus-ring py-1 px-2 text-decoration-none border rounded-2" placeholder="Password" name="password" >
+                        <button class="btn btn-primary" type="submit">Login</button>
+                        <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                    </div>
+                </form>
+            </li>
+            {% endif %}
+        </ul>
+        </div>
+      </nav>
+
     <div class = 'container'>
         <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Email address</label>
@@ -50,9 +74,9 @@
           <p class="col-md-4 mb-0 text-body-secondary">© 2023 Best Cars Dealership, INC</p>
       
           <ul class="nav col-md-4 justify-content-end">
-            <li class="nav-item"><a href="about" class="nav-link px-2 text-body-secondary">Home</a></li>
-            <li class="nav-item"><a href="contact" class="nav-link px-2 text-body-secondary">Catalog</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Contact Us</a></li>
+            <li class="nav-item"><a href="{% url 'djangoapp:about' %}" class="nav-link px-2 text-body-secondary">Home</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Catalog</a></li>
+            <li class="nav-item"><a href="{% url 'djangoapp:contact' %}" class="nav-link px-2 text-body-secondary">Contact Us</a></li>
           </ul>
         </footer>
       </div>
