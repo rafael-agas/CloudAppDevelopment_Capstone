@@ -61,7 +61,26 @@
           </nav>
 
     <!--Add a dealer table here -->
-
+    <div class = "container">
+        <table class = "table table-hover">
+            <thead> 
+                <tr>
+                    <th>ID</td>
+                    <th>Name</td>
+                    <th>Address</td>
+                </tr>   
+            </thead>
+            <tbody>
+                {% for dealership in dealership_list %}
+                <tr>
+                    <td>{{dealership.id}}</td>
+                    <td>{{dealership.full_name}}</td>
+                    <td>{{dealership.address}} {{dealership.city}}, {{dealership.st}} {{dealership.zip}} </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <div>
         <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
           <p class="col-md-4 mb-0 text-body-secondary">© 2023 Best Cars Dealership, INC</p>
