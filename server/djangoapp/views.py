@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -90,7 +90,30 @@ def get_dealer_details(request, dealer_id):
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/ad3ea32e-d99c-4d84-ac0e-58b0030eb458/dealership-package/get-review"
         reviews = get_dealer_reviews_from_cf(url, dealerId=dealer_id)
         context["review_list"] = reviews
+        context["dealer_id"] = dealer_id
     return render(request, 'djangoapp/dealer_details.html', context)
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+def add_review(request, dealer_id, **kwargs):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            review = {
+                'time': datetime.utcnow().isoformat(),
+                'dealership': dealer_id,
+                'review': request.POST['review'],
+                'purchase': request.POST['purchase'],
+                'purchase_date': request.POST['purchase_date'],
+                'car_make': request.POST['car_make'],
+                'car_model': request.POST['car_model'],
+                'car_year': request.POST['car_year']
+            }
+            
+            json_payload = {'review' : review}
+            url = "API_URL"
+            headers = {'Content-Type': 'application/json'}
+            response = post_request(url, json_payload, **kwargs)
+            print(response.json())
+            return render(request, 'djangoapp/dealer_details.html', {response : response})
+        else:
+            return redirect('djangoapp:index')
+    else:
+        return redirect('djangoapp:index')

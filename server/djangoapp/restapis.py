@@ -15,12 +15,8 @@ def get_request(url, **kwargs):
     print("GET from {} ".format(url))
     try:
         # Call get method of requests library with URL and parameters
-        if api_key:
-            requests.get(url, params=params, headers={'Content-Type': 'application/json'},
-                                    auth=HTTPBasicAuth('apikey', api_key))
-        else: 
-            response = requests.get(url, headers={'Content-Type': 'application/json'},
-                                        params=kwargs)
+        response = requests.get(url, headers={'Content-Type': 'application/json'},
+                                    params=kwargs)
     except:
         # If any error occurs
         print("Network exception occurred")
@@ -31,7 +27,10 @@ def get_request(url, **kwargs):
     
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
-
+def post_request(url, json_payload, **kwargs):
+    response = requests.post(url, json=json_payload, **kwargs)
+    print(response)
+    return response
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 def get_dealers_from_cf(url, **kwargs):
@@ -69,7 +68,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
         for view in reviews:
             review_obj = DealerReview(dealership=view["dealership"], name=view["name"], purchase=view["purchase"],
             review=view['review'], purchase_date=view["purchase_date"], car_make=view["car_make"],
-            car_model=view["car_model"], car_year=view["car_year"],sentiment=view["review"], id=view["id"])
+            car_model=view["car_model"], car_year=view["car_year"],sentiment=analyze_review_sentiments(view["review"]), id=view["id"])
             results.append(review_obj)
     return results
 
@@ -77,4 +76,12 @@ def get_dealer_reviews_from_cf(url, dealerId):
 def analyze_review_sentiments(dealerreview):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
-    
+    url = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/e3e48cf8-7ceb-4be7-8a89-b79bba2cd19d"
+    api_key = "mwbmiYfBBM_iVj6Tn6CgETomajMWy3FTwHvYDKextUbD"
+    authenticator = IAMAuthenticator(api_key)
+    natural_language_understanding = NaturalLanguageUnderstandingV1(version='2021-08-01',authenticator=authenticator)
+    natural_language_understanding.set_service_url(url)
+    response = natural_language_understanding.analyze(text=dealerreview, language='en',
+         features=Features(emotion=EmotionOptions(targets=[dealerreview]))).get_result()
+    label = response['emotion']['document']["emotion"]
+    return max(label, key=label.get).capitalize()

@@ -56,19 +56,22 @@
     </nav>
 
     <!-- Add reviews as cards -->
+    <div class = "container">
+    <h2> Reviews for {{dealer_id}} </h2>
     {% for words in review_list %}
-    <div class="card">
+    <div class="card mb-2">
         <div class="card-header">
           Review
         </div>
         <div class="card-body">
           <blockquote class="blockquote mb-0">
             {{words.review}}
-            <footer class="blockquote-footer">{{words.name}} <cite title="Purchase Year">{{words.purchase_date}}</cite></footer>
+            <footer class="blockquote-footer">{{words.name}} <cite title="Purchase Year">{{words.purchase_date}}</cite> Sentiment: {{words.sentiment}}</footer>
           </blockquote>
         </div>
     </div>
     {% endfor %}
+    </div
     </body>
 
 </html>
