@@ -5,7 +5,7 @@ from requests.auth import HTTPBasicAuth
 from ibm_watson import NaturalLanguageUnderstandingV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson.natural_language_understanding_v1 \
-    import Features, EmotionOptions
+    import Features, SentimentOptions
 
 # Create a `get_request` to make HTTP GET requests
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
@@ -54,12 +54,12 @@ def get_dealers_from_cf(url, **kwargs):
     return results
 
 # Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
-def get_dealer_reviews_from_cf(url, dealerId):
+def get_dealer_reviews_from_cf(url, dealer_id):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
     results = []
-    if dealerId:
-        json_result = get_request(url, id = dealerId)
+    if dealer_id:
+        json_result = get_request(url, id = dealer_id)
     else:
         json_result = get_request(url)
     if json_result:
@@ -82,6 +82,6 @@ def analyze_review_sentiments(dealerreview):
     natural_language_understanding = NaturalLanguageUnderstandingV1(version='2021-08-01',authenticator=authenticator)
     natural_language_understanding.set_service_url(url)
     response = natural_language_understanding.analyze(text=dealerreview, language='en',
-         features=Features(emotion=EmotionOptions(targets=[dealerreview]))).get_result()
-    label = response['emotion']['document']["emotion"]
-    return max(label, key=label.get).capitalize()
+         features=Features(sentiment=SentimentOptions(targets=[dealerreview]))).get_result()
+    label = response["sentiment"]["document"]["label"]
+    return label.capitalize
