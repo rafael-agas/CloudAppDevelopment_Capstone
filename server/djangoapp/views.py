@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
-# from .models import related models
+from .models import CarModel
 from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -97,24 +97,33 @@ def get_dealer_details(request, dealer_id):
 # Create a `add_review` view to submit a review
 def add_review(request, dealer_id, **kwargs):
     if request.user.is_authenticated:
-        if request.method == 'POST':
+        context = {}
+        if request.method == "GET":
+            cars = CarModel.objects.filter(dealer_Id=dealer_id)
+            context["cars"] = cars
+            print(cars)
+            return render(request, 'djangoapp/add_review.html', context)
+        elif request.method == 'POST':
             review = {
                 'time': datetime.utcnow().isoformat(),
                 'dealership': dealer_id,
-                'review': request.POST['review'],
+                'review': request.POST['review']
+            }
+            if purchase:
+                review = {
                 'purchase': request.POST['purchase'],
                 'purchase_date': request.POST['purchase_date'],
                 'car_make': request.POST['car_make'],
                 'car_model': request.POST['car_model'],
-                'car_year': request.POST['car_year']
+                'car_year': car.year.strftime("%Y")
             }
             
             json_payload = {'review' : review}
-            url = "API_URL"
+            url = "https://us-south.functions.appdomain.cloud/api/v1/web/ad3ea32e-d99c-4d84-ac0e-58b0030eb458/dealership-package/post-review"
             headers = {'Content-Type': 'application/json'}
             response = post_request(url, json_payload, **kwargs)
-            print(response.json())
-            return render(request, 'djangoapp/dealer_details.html', {response : response})
+        
+            return redirect("djangoapp:dealer_details", delear_id=dealer_id)
         else:
             return redirect('djangoapp:index')
     else:
