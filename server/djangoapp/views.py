@@ -107,9 +107,10 @@ def add_review(request, dealer_id, **kwargs):
             review = {
                 'time': datetime.utcnow().isoformat(),
                 'dealership': dealer_id,
-                'review': request.POST['review']
+                'review': request.POST['review'],
+                'name' : request.POST['name'],
             }
-            if purchase:
+            if 'purchasecheck' in request.POST:
                 review = {
                 'purchase': request.POST['purchase'],
                 'purchase_date': request.POST['purchase_date'],
