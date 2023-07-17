@@ -33,6 +33,7 @@ class CarModel(models.Model):
     body = models.CharField(null=False, max_length=30)
     year = models.IntegerField()
     dealer_Id = models.IntegerField()
+    car_id = models.IntegerField(default=1, primary_key=True)
     make = models.ForeignKey(CarMake, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
