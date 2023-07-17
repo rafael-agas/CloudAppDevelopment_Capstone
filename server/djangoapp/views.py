@@ -9,6 +9,7 @@ from django.contrib import messages
 from datetime import datetime
 import logging
 import json
+import random
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -103,30 +104,34 @@ def add_review(request, dealer_id, **kwargs):
             context["cars"] = cars
             print(cars)
             return render(request, 'djangoapp/add_review.html', context)
-        elif request.method == 'POST':
-            car_id = request.POST["car"]
+        elif request.method == "POST":
+            car_id = int(request.POST["car"])
             car = CarModel.objects.get(pk=car_id)
+            username = request.user.username
             review = {
+                'id' : random.randint(0, 5000),
                 'time': datetime.utcnow().isoformat(),
                 'dealership': dealer_id,
                 'review': request.POST['review'],
-                'name' : request.POST['name'],
+                'name' : username.first_name + username.last_name,
+                'another' : "field",
             }
             if 'purchasecheck' in request.POST:
+                if request.POST['purchasecheck'] == "on":
+                    review = {'purchase' : True}
+                else:
+                    review = {'purchase' : False}
                 review = {
-                'purchase': request.POST['purchasecheck'],
                 'purchase_date': request.POST['purchase_date'],
                 'car_make': car.make,
                 'car_model': car.name,
-                'car_year': car.year.strftime("%Y")
-            }
-            
-            json_payload = {'review' : review}
+                'car_year': car.year
+            }   
             url = "https://us-south.functions.appdomain.cloud/api/v1/web/ad3ea32e-d99c-4d84-ac0e-58b0030eb458/dealership-package/post-review"
-            headers = {'Content-Type': 'application/json'}
-            response = post_request(url, json_payload, id=dealer_id)
-        
-            return redirect("djangoapp:dealer_details", delear_id=dealer_id)
+            json_payload = {}
+            json_payload["review"] = review
+            post_request(url, json_payload, id=dealer_id)
+            return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
         else:
             return redirect('djangoapp:index')
     else:

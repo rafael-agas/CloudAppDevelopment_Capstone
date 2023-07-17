@@ -60,29 +60,24 @@
         <!--Review Form Code Starts here-->
         <div class="container">
             <h1> Add a review about {{dealer_id}} </h2>
-            <form action = "{% url 'djangoapp:add_review' dealer_id % }" method="post">
-                <textarea class ="form-control mb-2" id="content" name="content" rows="2" required>
+            <form action = "{% url 'djangoapp:add_review' dealer_id %}" method="post">
+                <textarea class ="form-control mb-2" id="review" name="review" rows="2" required>
                 </textarea>
                 <div class="form-check mb-2">
                     <input class="form-check-input" type="checkbox" name="purchasecheck" id="purchasecheck">
-                    <label class="form-check-label" for="purchasecheck">Have Purchased the car from ? <span class="text-muted">(select purchased car information below if checked)</span></label>
+                    <label class="form-check-label" for="purchasecheck">Have you purchased the car from ? <span class="text-muted">(select purchased car information below if checked)</span></label>
                 </div>
                 <p><strong> Select your car (model-make-year): </strong>
                 <select name="car" id="car" class="form-select mb-2" required>
                     {% for car in cars %}
                         <option selected value = {{car.car_id}}>{{car.name}}-{{car.make.name}}-{{car.year}}</option>
                     {% endfor %}
-                </select> </p>
-                <strong>Select Your Purchase Date: </strong>
-                <input class="date-own form-control mb-2 w-50" type="text" name="purchase_date" id="purchase_date" placeholder="MM/DD/YYY"></input>
-                <script type="text/javascript">
-                    $('.date-own').datepicker({
-                       format: 'mm/dd/yyyy'
-                     });
-               </script>
-               <strong>Name: </strong>
-               <input class="form-control mb-2 w-50" type="text" name="name" id="name" placeholder="First and Last Name"></input>
-               <button type="submit" class="btn btn-primary">Submit</button>
+                </select></p>
+                <div>
+                    <strong>Select Your Purchase Date: </strong>
+                    <input class="date-own form-control mb-2 w-50" type="text" name="purchase_date" id="purchase_date" placeholder="MM/DD/YYY"></input>
+                </div>
+               <button type="submit" class="btn btn-primary" formmethod="post">Submit</button>
             </form>
         </div>
         <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
@@ -95,4 +90,9 @@
             </ul>
         </footer>
     </body>
+    <script type="text/javascript">
+        $('.date-own').datepicker({
+           format: 'mm/dd/yyyy'
+         });
+   </script>
 </html>
