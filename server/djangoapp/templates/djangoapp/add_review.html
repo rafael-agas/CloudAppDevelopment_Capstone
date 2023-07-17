@@ -70,7 +70,7 @@
                 <p><strong> Select your car (model-make-year): </strong>
                 <select name="car" id="car" class="form-select mb-2" required>
                     {% for car in cars %}
-                        <option selected value = {{car.dealer_id}}>{{car.name}}-{{car.make.name}}-{{car.year}}</option>
+                        <option selected value = {{car.car_id}}>{{car.name}}-{{car.make.name}}-{{car.year}}</option>
                     {% endfor %}
                 </select> </p>
                 <strong>Select Your Purchase Date: </strong>
