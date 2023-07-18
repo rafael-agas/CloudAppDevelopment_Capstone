@@ -22,7 +22,7 @@
                 <a class="nav-link active" aria-current="page" href="{% url 'djangoapp:about' %}">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Catalog</a>
+                <a class="nav-link" href="{% url 'djangoapp:index' %}">Catalog</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'djangoapp:contact' %}">Contact</a>
@@ -32,7 +32,7 @@
         <ul class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}
             <li>
-                <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
+                <a class="btn btn-link" href="#">{{ user.first_name }} ({{ user.username }})</a>
                 <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
             </li>
             {% else %}
@@ -75,7 +75,7 @@
       
           <ul class="nav col-md-4 justify-content-end">
             <li class="nav-item"><a href="{% url 'djangoapp:about' %}" class="nav-link px-2 text-body-secondary">Home</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Catalog</a></li>
+            <li class="nav-item"><a href="{% url 'djangoapp:index' %}" class="nav-link px-2 text-body-secondary">Catalog</a></li>
             <li class="nav-item"><a href="{% url 'djangoapp:contact' %}" class="nav-link px-2 text-body-secondary">Contact Us</a></li>
           </ul>
         </footer>

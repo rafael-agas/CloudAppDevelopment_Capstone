@@ -81,3 +81,21 @@ def analyze_review_sentiments(dealerreview):
          features=Features(sentiment=SentimentOptions(targets=[dealerreview]))).get_result()
     label = response["sentiment"]["document"]["label"]
     return label.capitalize
+
+def get_single_dealers(**kwargs):
+    results = {}
+    # Call get_request with a URL parameter
+    url = "https://us-south.functions.appdomain.cloud/api/v1/web/ad3ea32e-d99c-4d84-ac0e-58b0030eb458/dealership-package/get-dealership"
+    if 'dealer_id' in kwargs:
+        json_result = get_request(url, id=kwargs["dealer_id"])
+    else:
+        json_result = get_request(url)
+    if json_result:
+        dealers = json_result[0]
+        # Creates a dealer Object from the JSON result
+        dealer_obj = CarDealer(address=dealers["address"], city=dealers["city"], full_name=dealers["full_name"],
+                                id=dealers["id"], lat=dealers["lat"], long=dealers["long"],
+                                short_name=dealers["short_name"],
+                                st=dealers["st"], zip=dealers["zip"])
+        results["dealer"] = dealer_obj
+    return results

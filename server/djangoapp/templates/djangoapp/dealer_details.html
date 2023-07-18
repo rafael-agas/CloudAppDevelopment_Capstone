@@ -27,11 +27,7 @@
             </div>
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'djangoapp:add_review' dealer_id %}">Add A Review</a>
-                    </li>
-                <li>
-                    <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
+                    <a class="btn btn-link" href="#">{{ user.first_name }} ({{ user.username }})</a>
                     <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
                 </li>
                 {% else %}
@@ -60,7 +56,7 @@
 
         <!-- Review Card Forms -->
         <div class="container">
-            <h2>Reviews for {{ dealer_id }}</h2>
+            <h2>Reviews for {{ dealership.full_name }}</h2>
             <div class="card-columns">
                 {% for words in review_list %}
                 <div class="card" style="width: 18rem;">
@@ -79,6 +75,11 @@
                 </div>
                 {% endfor %}
             </div>
+            {% if user.is_authenticated %}
+            <a class="btn btn-primary" href="{% url 'djangoapp:add_review' dealer_id %}">Add A Review</a>
+            {% else %}
+                <a class="btn btn-primary" href="{% url 'djangoapp:registration' %}">Sign Up To Add A Review</a>
+            {% endif %}        
         </div>
 
         <div>
@@ -87,7 +88,7 @@
             
                 <ul class="nav col-md-4 justify-content-end">
                     <li class="nav-item"><a href="{% url 'djangoapp:about' %}" class="nav-link px-2 text-body-secondary">Home</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Catalog</a></li>
+                    <li class="nav-item"><a href="{% url 'djangoapp:index' %}" class="nav-link px-2 text-body-secondary">Catalog</a></li>
                     <li class="nav-item"><a href="{% url 'djangoapp:contact' %}" class="nav-link px-2 text-body-secondary">Contact Us</a></li>
                 </ul>
             </footer>
