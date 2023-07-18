@@ -97,7 +97,6 @@ def get_dealer_details(request, dealer_id):
 
 # Create a `add_review` view to submit a review
 def add_review(request, dealer_id, **kwargs):
-    print(dealer_id)
     if request.user.is_authenticated:
         context = {}
         if request.method == "GET":
@@ -114,7 +113,7 @@ def add_review(request, dealer_id, **kwargs):
             review["time"] = datetime.utcnow().isoformat()
             review["dealership"] = dealer_id
             review["review"] = request.POST['review']
-            review["id"] = random.randInt(0,9999)
+            review["id"] = random.randint(0,9999)
             review["name"] = username.first_name + " " + username.last_name
             review["purchase"] = False
             if 'purchasecheck' in request.POST:
