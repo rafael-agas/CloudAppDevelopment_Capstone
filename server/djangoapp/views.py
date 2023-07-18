@@ -110,28 +110,25 @@ def add_review(request, dealer_id, **kwargs):
             car_id = int(request.POST["car"])
             car = CarModel.objects.get(pk=car_id)
             username = request.user
-            review = {
-                'id' : random.randint(0, 5000),
-                'time': datetime.utcnow().isoformat(),
-                'dealership': dealer_id,
-                'review': request.POST['review'],
-                'name' : username.first_name + username.last_name,
-                'another' : "field",
-            }
+            review = {}
+            review["time"] = datetime.utcnow().isoformat()
+            review["dealership"] = dealer_id
+            review["review"] = request.POST['review']
+            review["id"] = random.randInt(0,9999)
+            review["name"] = username.first_name + " " + username.last_name
+            review["purchase"] = False
             if 'purchasecheck' in request.POST:
-                if request.POST['purchasecheck'] == "on":
-                    review = {'purchase' : True}
-                else:
-                    review = {'purchase' : False}
-                review = {
-                'purchase_date': request.POST['purchase_date'],
-                'car_make': car.make.name,
-                'car_model': car.name,
-                'car_year': car.year
-            }   
+                if request.POST['purchasecheck'] == 'on':
+                    review["purchase"] = True
+            review["purchase_date"] = request.POST['purchase_date']
+            review["car_make"] = car.make.name
+            review["car_model"] = car.name
+            review["car_year"] = car.year
+
             url = "https://us-south.functions.appdomain.cloud/api/v1/web/ad3ea32e-d99c-4d84-ac0e-58b0030eb458/dealership-package/post-review"
             json_payload = {}
             json_payload["review"] = review
+            print(json_payload)
             post_request(url, json_payload)
             return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
         else:
