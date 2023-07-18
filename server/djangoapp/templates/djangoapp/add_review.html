@@ -59,8 +59,9 @@
 
         <!--Review Form Code Starts here-->
         <div class="container">
-            <h1> Add a review about {{dealer_id}} </h2>
-            <form action = "{% url 'djangoapp:add_review' dealer_id %}" method="post">
+            <h1> Add a review about ? </h1>
+            <form action="{% url 'djangoapp:add_review' dealer_id %}" method="post">
+                {% csrf_token %}
                 <textarea class ="form-control mb-2" id="review" name="review" rows="2" required>
                 </textarea>
                 <div class="form-check mb-2">
