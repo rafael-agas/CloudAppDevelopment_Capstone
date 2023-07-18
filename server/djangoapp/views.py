@@ -127,7 +127,6 @@ def add_review(request, dealer_id, **kwargs):
             url = "https://us-south.functions.appdomain.cloud/api/v1/web/ad3ea32e-d99c-4d84-ac0e-58b0030eb458/dealership-package/post-review"
             json_payload = {}
             json_payload["review"] = review
-            print(json_payload)
             post_request(url, json_payload)
             return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
         else:
